@@ -37,10 +37,12 @@ type config struct {
 	OmniRPCPwd  string `env:"OMNI_RPC_PWD"`
 
 	EosRPC    string `env:"EOS_RPC"`
+	EthEnable bool   `env:"ETH_ENABLE"`
 	EosEnable bool   `env:"EOS_ENABLE"`
+	BtcEnable bool   `env:"BTC_ENABLE"`
 }
 
-// Cfg
+// Cfg ..
 var Cfg *config
 
 // EnvCreate 初始化运行环境
@@ -68,12 +70,20 @@ func EnvCreate() {
 
 	// 初始化数据库
 	DbCon = mcommon.DbCreate(Cfg.MySqlDataSourceName, Cfg.MySqlIsShowSQL)
-	// 初始化eth rpc
-	ethclient.InitClient(Cfg.EthRPC)
-	// 初始化omni rpc
-	omniclient.InitClient(Cfg.OmniRPCHost, Cfg.OmniRPCUser, Cfg.OmniRPCPwd)
-	// 初始化eos rpc
-	eosclient.InitClient(Cfg.EosRPC)
+	if Cfg.EthEnable {
+		// 初始化eth rpc
+		ethclient.InitClient(Cfg.EthRPC)
+	}
+
+	if Cfg.BtcEnable {
+		// 初始化omni rpc
+		omniclient.InitClient(Cfg.OmniRPCHost, Cfg.OmniRPCUser, Cfg.OmniRPCPwd)
+	}
+
+	if Cfg.EosEnable {
+		// 初始化eos rpc
+		eosclient.InitClient(Cfg.EosRPC)
+	}
 }
 
 // EnvDestroy 销毁运行环境

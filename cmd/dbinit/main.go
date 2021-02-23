@@ -123,22 +123,22 @@ func main() {
 	configStrRows := []*model.DBTAppConfigStr{
 		{
 			// eth 冷钱包地址
-			K: "cold_wallet_address",
+			K: "cold_wallet_address_eth",
 			V: "",
 		},
 		{
 			// eth 热钱包地址
-			K: "hot_wallet_address",
+			K: "hot_wallet_address_eth",
 			V: ethAddresses[0],
 		},
 		{
 			// erc20 零钱整理手续费 热钱包地址
-			K: "fee_wallet_address",
+			K: "fee_wallet_address_erc20",
 			V: ethAddresses[1],
 		},
 		{
 			// erc20 零钱整理手续费 热钱包地址 列表
-			K: "fee_wallet_address_list",
+			K: "fee_wallet_address_list_erc20",
 			V: "",
 		},
 		{
@@ -307,7 +307,7 @@ func main() {
 	appStatusIntRows := []*model.DBTAppStatusInt{
 		{
 			// eth blocknum
-			K: "seek_num",
+			K: "eth_seek_num",
 			V: ethRpcBlockNum,
 		},
 		{
@@ -371,7 +371,7 @@ func main() {
 	feeAddressValue, err := app.SQLGetTAppConfigStrValueByK(
 		context.Background(),
 		xenv.DbCon,
-		"fee_wallet_address",
+		"fee_wallet_address_erc20",
 	)
 	if err != nil && err != sql.ErrNoRows {
 		mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
@@ -381,7 +381,7 @@ func main() {
 	feeAddressListValue, err := app.SQLGetTAppConfigStrValueByK(
 		context.Background(),
 		xenv.DbCon,
-		"fee_wallet_address_list",
+		"fee_wallet_address_list_erc20",
 	)
 	if err != nil && err != sql.ErrNoRows {
 		mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
@@ -399,7 +399,7 @@ func main() {
 		context.Background(),
 		xenv.DbCon,
 		&model.DBTAppConfigStr{
-			K: "fee_wallet_address_list",
+			K: "fee_wallet_address_list_erc20",
 			V: feeAddressListValue,
 		},
 	)

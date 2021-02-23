@@ -166,7 +166,7 @@ func CheckBlockSeek() {
 		seekValue, err := app.SQLGetTAppStatusIntValueByK(
 			context.Background(),
 			xenv.DbCon,
-			"seek_num",
+			"eth_seek_num",
 		)
 		if err != nil {
 			mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
@@ -185,7 +185,7 @@ func CheckBlockSeek() {
 			feeAddressValue, err := app.SQLGetTAppConfigStrValueByK(
 				context.Background(),
 				xenv.DbCon,
-				"fee_wallet_address_list",
+				"fee_wallet_address_list_erc20",
 			)
 			if err != nil {
 				mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
@@ -307,7 +307,7 @@ func CheckBlockSeek() {
 					context.Background(),
 					xenv.DbCon,
 					&model.DBTAppStatusInt{
-						K: "seek_num",
+						K: "eth_seek_num",
 						V: i,
 					},
 				)
@@ -328,7 +328,7 @@ func CheckAddressOrg() {
 		coldAddressValue, err := app.SQLGetTAppConfigStrValueByK(
 			context.Background(),
 			xenv.DbCon,
-			"cold_wallet_address",
+			"cold_wallet_address_eth",
 		)
 		if err != nil {
 			mcommon.Log.Warnf("SQLGetTAppConfigInt err: [%T] %s", err, err.Error())
@@ -1091,7 +1091,7 @@ func CheckWithdraw() {
 		hotAddressValue, err := app.SQLGetTAppConfigStrValueByK(
 			context.Background(),
 			xenv.DbCon,
-			"hot_wallet_address",
+			"hot_wallet_address_eth",
 		)
 		if err != nil {
 			mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
@@ -2068,7 +2068,7 @@ func CheckErc20TxOrg() {
 			feeAddressValue, err := app.SQLGetTAppConfigStrValueByK(
 				context.Background(),
 				dbTx,
-				"fee_wallet_address",
+				"fee_wallet_address_erc20",
 			)
 			if err != nil {
 				mcommon.Log.Errorf("err: [%T] %s", err, err.Error())

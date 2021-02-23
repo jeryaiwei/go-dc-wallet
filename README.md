@@ -114,7 +114,7 @@ go run cmd/dbinit/main.go
 #### 手动添加自身需要设置的数据
 ```
 # eth冷钱包地址
-t_app_config_str.cold_wallet_address
+t_app_config_str.cold_wallet_address_eth
 # btc冷钱包地址
 t_app_config_str.cold_wallet_address_btc
 # eos 冷钱包地址
