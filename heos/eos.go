@@ -94,7 +94,7 @@ func CheckBlockSeek() {
 			mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 			return
 		}
-		rpcChainInfo, err := eosclient.RpcChainGetInfo()
+		rpcChainInfo, err := eosclient.RPCChainGetInfo()
 		if err != nil {
 			mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 			return
@@ -117,7 +117,7 @@ func CheckBlockSeek() {
 			now := time.Now().Unix()
 			for i := startI; i < endI; i++ {
 				mcommon.Log.Debugf("eos check block: %d", i)
-				rpcBlock, err := eosclient.RpcChainGetBlock(i)
+				rpcBlock, err := eosclient.RPCChainGetBlock(i)
 				if err != nil {
 					mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 					return
@@ -426,7 +426,7 @@ func CheckWithdraw() {
 			return
 		}
 		// 获取热钱包余额
-		rpcAccount, err := eosclient.RpcChainGetAccount(
+		rpcAccount, err := eosclient.RPCChainGetAccount(
 			hotAddressValue,
 		)
 		if err != nil {
@@ -454,7 +454,7 @@ func CheckWithdraw() {
 		}
 		rpcHotBalance = rpcHotBalance.Sub(pendingBalanceReal)
 		// 获取链信息
-		rpcChainInfo, err := eosclient.RpcChainGetInfo()
+		rpcChainInfo, err := eosclient.RPCChainGetInfo()
 		if err != nil {
 			mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 			return
@@ -747,9 +747,9 @@ func CheckRawTxSend() {
 		for _, sendRow := range sendRows {
 			// 判定是否已经发送过
 			isSend := false
-			_, err := eosclient.RpcHistoryGetTransaction(sendRow.TxHash)
+			_, err := eosclient.RPCHistoryGetTransaction(sendRow.TxHash)
 			if err != nil {
-				rpcErr, ok := err.(*eosclient.StRpcRespError)
+				rpcErr, ok := err.(*eosclient.StRPCRespError)
 				if !ok {
 					mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 					return
@@ -777,11 +777,11 @@ func CheckRawTxSend() {
 					mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 					continue
 				}
-				_, err = eosclient.RpcChainPushTransaction(
+				_, err = eosclient.RPCChainPushTransaction(
 					args,
 				)
 				if err != nil {
-					rpcErr, ok := err.(*eosclient.StRpcRespError)
+					rpcErr, ok := err.(*eosclient.StRPCRespError)
 					if !ok {
 						mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 						continue
@@ -932,7 +932,7 @@ func CheckRawTxConfirm() {
 		var sendIDs []int64
 		withdrawIDs = []int64{}
 		for _, sendRow := range sendRows {
-			_, err := eosclient.RpcHistoryGetTransaction(
+			_, err := eosclient.RPCHistoryGetTransaction(
 				sendRow.TxHash,
 			)
 			if err != nil {

@@ -13,25 +13,25 @@ var locOmniRPCUser string
 var locOmniRPCPwd string
 var rpcURI string
 
-type StRpcRespError struct {
+type StRPCRespError struct {
 	Code    int64  `json:"code"`
 	Message string `json:"message"`
 }
 
-func (e *StRpcRespError) Error() string {
+func (e *StRPCRespError) Error() string {
 	return fmt.Sprintf("%d %s", e.Code, e.Message)
 }
 
-type StRpcReq struct {
+type StRPCReq struct {
 	Jsonrpc string        `json:"jsonrpc"`
 	ID      string        `json:"id"`
 	Method  string        `json:"method"`
 	Params  []interface{} `json:"params"`
 }
 
-type StRpcResp struct {
+type StRPCResp struct {
 	ID    string          `json:"id"`
-	Error *StRpcRespError `json:"error"`
+	Error *StRPCRespError `json:"error"`
 }
 
 type StTxResultVin struct {
@@ -129,7 +129,7 @@ func InitClient(omniRPCHost, omniRPCUser, omniRPCPwd string) {
 }
 
 func doReq(method string, arqs []interface{}, resp interface{}) error {
-	_, body, errs := gorequest.New().SetBasicAuth(locOmniRPCUser, locOmniRPCPwd).Timeout(time.Minute * 5).Post(rpcURI).Send(StRpcReq{
+	_, body, errs := gorequest.New().SetBasicAuth(locOmniRPCUser, locOmniRPCPwd).Timeout(time.Minute * 5).Post(rpcURI).Send(StRPCReq{
 		Jsonrpc: "1.0",
 		ID:      mcommon.GetUUIDStr(),
 		Method:  method,
@@ -145,10 +145,10 @@ func doReq(method string, arqs []interface{}, resp interface{}) error {
 	return nil
 }
 
-// RpcGetBlockCount 获取block number
-func RpcGetBlockCount() (int64, error) {
+// RPCGetBlockCount 获取block number
+func RPCGetBlockCount() (int64, error) {
 	resp := struct {
-		StRpcResp
+		StRPCResp
 		Result int64 `json:"result"`
 	}{}
 	err := doReq(
@@ -165,10 +165,10 @@ func RpcGetBlockCount() (int64, error) {
 	return resp.Result, nil
 }
 
-// RpcGetBlockHash 获取block hash
-func RpcGetBlockHash(blockHeight int64) (string, error) {
+// RPCGetBlockHash 获取block hash
+func RPCGetBlockHash(blockHeight int64) (string, error) {
 	resp := struct {
-		StRpcResp
+		StRPCResp
 		Result string `json:"result"`
 	}{}
 	err := doReq(
@@ -185,10 +185,10 @@ func RpcGetBlockHash(blockHeight int64) (string, error) {
 	return resp.Result, nil
 }
 
-// RpcGetBlockVerbose 获取block 内容
-func RpcGetBlockVerbose(blockHash string) (*StBlockResult, error) {
+// RPCGetBlockVerbose 获取block 内容
+func RPCGetBlockVerbose(blockHash string) (*StBlockResult, error) {
 	resp := struct {
-		StRpcResp
+		StRPCResp
 		Result *StBlockResult `json:"result"`
 	}{}
 	err := doReq(
@@ -205,10 +205,10 @@ func RpcGetBlockVerbose(blockHash string) (*StBlockResult, error) {
 	return resp.Result, nil
 }
 
-// RpcGetRawTransactionVerbose 获取tx
-func RpcGetRawTransactionVerbose(txHash string) (*StTxResult, error) {
+// RPCGetRawTransactionVerbose 获取tx
+func RPCGetRawTransactionVerbose(txHash string) (*StTxResult, error) {
 	resp := struct {
-		StRpcResp
+		StRPCResp
 		Result *StTxResult `json:"result"`
 	}{}
 	err := doReq(
@@ -225,10 +225,10 @@ func RpcGetRawTransactionVerbose(txHash string) (*StTxResult, error) {
 	return resp.Result, nil
 }
 
-// RpcDecodeRawTransaction 解析tx
-func RpcDecodeRawTransaction(txHex string) (*StTxResult, error) {
+// RPCDecodeRawTransaction 解析tx
+func RPCDecodeRawTransaction(txHex string) (*StTxResult, error) {
 	resp := struct {
-		StRpcResp
+		StRPCResp
 		Result *StTxResult `json:"result"`
 	}{}
 	err := doReq(
@@ -245,10 +245,10 @@ func RpcDecodeRawTransaction(txHex string) (*StTxResult, error) {
 	return resp.Result, nil
 }
 
-// RpcSendRawTransaction 发送tx
-func RpcSendRawTransaction(txHex string) (*string, error) {
+// RPCSendRawTransaction 发送tx
+func RPCSendRawTransaction(txHex string) (*string, error) {
 	resp := struct {
-		StRpcResp
+		StRPCResp
 		Result *string `json:"result"`
 	}{}
 	err := doReq(
@@ -265,10 +265,10 @@ func RpcSendRawTransaction(txHex string) (*string, error) {
 	return resp.Result, nil
 }
 
-// RpcOmniListBlockTransactions 检测交易
-func RpcOmniListBlockTransactions(blockNumber int64) ([]string, error) {
+// RPCOmniListBlockTransactions 检测交易
+func RPCOmniListBlockTransactions(blockNumber int64) ([]string, error) {
 	resp := struct {
-		StRpcResp
+		StRPCResp
 		Result []string `json:"result"`
 	}{}
 	err := doReq(
@@ -285,10 +285,10 @@ func RpcOmniListBlockTransactions(blockNumber int64) ([]string, error) {
 	return resp.Result, nil
 }
 
-// RpcOmniGetTransaction 查询交易
-func RpcOmniGetTransaction(txHash string) (*StOmniTx, error) {
+// RPCOmniGetTransaction 查询交易
+func RPCOmniGetTransaction(txHash string) (*StOmniTx, error) {
 	resp := struct {
-		StRpcResp
+		StRPCResp
 		Result *StOmniTx `json:"result"`
 	}{}
 	err := doReq(
@@ -305,10 +305,10 @@ func RpcOmniGetTransaction(txHash string) (*StOmniTx, error) {
 	return resp.Result, nil
 }
 
-// RpcOmniGetBalance 查询交易
-func RpcOmniGetBalance(address string, tokenIndex int64) (*StOmniBalanceResult, error) {
+// RPCOmniGetBalance 查询交易
+func RPCOmniGetBalance(address string, tokenIndex int64) (*StOmniBalanceResult, error) {
 	resp := struct {
-		StRpcResp
+		StRPCResp
 		Result *StOmniBalanceResult `json:"result"`
 	}{}
 	err := doReq(

@@ -228,17 +228,17 @@ func main() {
 	}
 
 	// 5. 初始化 t_app_status_int
-	ethRpcBlockNum, err := ethclient.RpcBlockNumber(context.Background())
+	ethRPCBlockNum, err := ethclient.RPCBlockNumber(context.Background())
 	if err != nil {
 		mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 		return
 	}
-	btcRpcBlockNum, err := omniclient.RpcGetBlockCount()
+	btcRPCBlockNum, err := omniclient.RPCGetBlockCount()
 	if err != nil {
 		mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 		return
 	}
-	rpcChainInfo, err := eosclient.RpcChainGetInfo()
+	rpcChainInfo, err := eosclient.RPCChainGetInfo()
 	if err != nil {
 		mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 		return
@@ -308,27 +308,27 @@ func main() {
 		{
 			// eth blocknum
 			K: "eth_seek_num",
-			V: ethRpcBlockNum,
+			V: ethRPCBlockNum,
 		},
 		{
 			// eth blocknum
 			K: "erc20_seek_num",
-			V: ethRpcBlockNum,
+			V: ethRPCBlockNum,
 		},
 		{
 			// btc blocknum
 			K: "btc_seek_num",
-			V: btcRpcBlockNum,
+			V: btcRPCBlockNum,
 		},
 		{
 			// omni blocknum
 			K: "omni_seek_num",
-			V: btcRpcBlockNum,
+			V: btcRPCBlockNum,
 		},
 		{
 			// btc blocknum
 			K: "btc_hot_fee_seek_num",
-			V: btcRpcBlockNum,
+			V: btcRPCBlockNum,
 		},
 		{
 			// eos blocknum
@@ -337,12 +337,12 @@ func main() {
 		},
 		{
 			// eth 到冷钱包手续费
-			K: "to_cold_gas_price",
+			K: "to_cold_gas_price_eth",
 			V: ethToColdGasPrice,
 		},
 		{
 			// eth 到用户手续费
-			K: "to_user_gas_price",
+			K: "to_user_gas_price_eth",
 			V: ethToUserGasPrice,
 		},
 		{

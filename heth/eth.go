@@ -173,7 +173,7 @@ func CheckBlockSeek() {
 			return
 		}
 		// rpc 获取当前最新区块数
-		rpcBlockNum, err := ethclient.RpcBlockNumber(context.Background())
+		rpcBlockNum, err := ethclient.RPCBlockNumber(context.Background())
 		if err != nil {
 			mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 			return
@@ -203,7 +203,7 @@ func CheckBlockSeek() {
 			for i := startI; i < endI; i++ {
 				// rpc获取block信息
 				//mcommon.Log.Debugf("eth check block: %d", i)
-				rpcBlock, err := ethclient.RpcBlockByNum(context.Background(), i)
+				rpcBlock, err := ethclient.RPCBlockByNum(context.Background(), i)
 				if err != nil {
 					mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 					return
@@ -374,7 +374,7 @@ func CheckAddressOrg() {
 		gasPriceValue, err := app.SQLGetTAppStatusIntValueByK(
 			context.Background(),
 			dbTx,
-			"to_cold_gas_price",
+			"to_cold_gas_price_eth",
 		)
 		if err != nil {
 			mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
@@ -384,7 +384,7 @@ func CheckAddressOrg() {
 		gasLimit := int64(21000)
 		feeValue := big.NewInt(gasLimit * gasPrice)
 		// chain id
-		chainID, err := ethclient.RpcNetworkID(context.Background())
+		chainID, err := ethclient.RPCNetworkID(context.Background())
 		if err != nil {
 			mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 			return
@@ -469,7 +469,7 @@ func CheckAddressOrg() {
 			// 签名
 			signedTx, err := types.SignTx(tx, types.NewEIP155Signer(big.NewInt(chainID)), privateKey)
 			if err != nil {
-				mcommon.Log.Warnf("RpcNetworkID err: [%T] %s", err, err.Error())
+				mcommon.Log.Warnf("RPCNetworkID err: [%T] %s", err, err.Error())
 				return
 			}
 			ts := types.Transactions{signedTx}
@@ -708,7 +708,7 @@ func CheckRawTxSend() {
 					mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 					continue
 				}
-				err = ethclient.RpcSendTransaction(
+				err = ethclient.RPCSendTransaction(
 					context.Background(),
 					tx,
 				)
@@ -900,7 +900,7 @@ func CheckRawTxConfirm() {
 		var sendHashes []string
 		for _, sendRow := range sendRows {
 			if !mcommon.IsStringInSlice(sendHashes, sendRow.TxID) {
-				rpcTx, err := ethclient.RpcTransactionByHash(
+				rpcTx, err := ethclient.RPCTransactionByHash(
 					context.Background(),
 					sendRow.TxID,
 				)
@@ -1113,7 +1113,7 @@ func CheckWithdraw() {
 			return
 		}
 		// 获取热钱包余额
-		hotAddressBalance, err := ethclient.RpcBalanceAt(
+		hotAddressBalance, err := ethclient.RPCBalanceAt(
 			context.Background(),
 			hotAddressValue,
 		)
@@ -1140,7 +1140,7 @@ func CheckWithdraw() {
 		gasPriceValue, err := app.SQLGetTAppStatusIntValueByK(
 			context.Background(),
 			xenv.DbCon,
-			"to_user_gas_price",
+			"to_user_gas_price_eth",
 		)
 		if err != nil {
 			mcommon.Log.Warnf("err: [%T] %s", err, err.Error())
@@ -1149,7 +1149,7 @@ func CheckWithdraw() {
 		gasPrice := gasPriceValue
 		gasLimit := int64(21000)
 		feeValue := gasLimit * gasPrice
-		chainID, err := ethclient.RpcNetworkID(context.Background())
+		chainID, err := ethclient.RPCNetworkID(context.Background())
 		if err != nil {
 			mcommon.Log.Warnf("err: [%T] %s", err, err.Error())
 			return
@@ -1417,7 +1417,7 @@ func CheckErc20BlockSeek() {
 			return
 		}
 		// rpc 获取当前最新区块数
-		rpcBlockNum, err := ethclient.RpcBlockNumber(context.Background())
+		rpcBlockNum, err := ethclient.RPCBlockNumber(context.Background())
 		if err != nil {
 			mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 			return
@@ -1455,14 +1455,14 @@ func CheckErc20BlockSeek() {
 			}
 			for _, contractRow := range configTokenRows {
 				configTokenRowAddresses = append(configTokenRowAddresses, contractRow.TokenAddress)
-				configTokenRowMap[contractRow.TokenAddress] = contractRow
+				configTokenRowMap[strings.ToLower(contractRow.TokenAddress)] = contractRow
 			}
 			// 遍历获取需要查询的block信息
 			for i := startI; i < endI; i++ {
 				//mcommon.Log.Debugf("erc20 check block: %d", i)
 				if len(configTokenRowAddresses) > 0 {
 					// rpc获取block信息
-					logs, err := ethclient.RpcFilterLogs(
+					logs, err := ethclient.RPCFilterLogs(
 						context.Background(),
 						i,
 						i,
@@ -1536,7 +1536,7 @@ func CheckErc20BlockSeek() {
 								mcommon.Log.Errorf("no configTokenRowMap of: %s", contractAddress)
 								return
 							}
-							rpcTxReceipt, err := ethclient.RpcTransactionReceipt(
+							rpcTxReceipt, err := ethclient.RPCTransactionReceipt(
 								context.Background(),
 								log.TxHash.Hex(),
 							)
@@ -1547,7 +1547,7 @@ func CheckErc20BlockSeek() {
 							if rpcTxReceipt.Status <= 0 {
 								continue
 							}
-							rpcTx, err := ethclient.RpcTransactionByHash(
+							rpcTx, err := ethclient.RPCTransactionByHash(
 								context.Background(),
 								log.TxHash.Hex(),
 							)
@@ -1775,7 +1775,7 @@ func CheckErc20TxOrg() {
 		gasPriceValue, err := app.SQLGetTAppStatusIntValueByK(
 			context.Background(),
 			xenv.DbCon,
-			"to_cold_gas_price",
+			"to_cold_gas_price_eth",
 		)
 		if err != nil {
 			mcommon.Log.Warnf("err: [%T] %s", err, err.Error())
@@ -1785,7 +1785,7 @@ func CheckErc20TxOrg() {
 		ethGasUse := int64(21000)
 		ethFee := big.NewInt(ethGasUse * gasPriceValue)
 		// chainID
-		chainID, err := ethclient.RpcNetworkID(context.Background())
+		chainID, err := ethclient.RPCNetworkID(context.Background())
 		if err != nil {
 			mcommon.Log.Warnf("err: [%T] %s", err, err.Error())
 			return
@@ -1873,7 +1873,7 @@ func CheckErc20TxOrg() {
 			// 读取eth余额
 			_, ok = addressEthBalanceMap[txRow.ToAddress]
 			if !ok {
-				balance, err := ethclient.RpcBalanceAt(
+				balance, err := ethclient.RPCBalanceAt(
 					context.Background(),
 					txRow.ToAddress,
 				)
@@ -2089,12 +2089,12 @@ func CheckErc20TxOrg() {
 				mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 				return
 			}
-			feeAddressBalance, err := ethclient.RpcBalanceAt(
+			feeAddressBalance, err := ethclient.RPCBalanceAt(
 				context.Background(),
 				feeAddressValue,
 			)
 			if err != nil {
-				mcommon.Log.Errorf("RpcBalanceAt err: [%T] %s", err, err.Error())
+				mcommon.Log.Errorf("RPCBalanceAt err: [%T] %s", err, err.Error())
 				return
 			}
 			pendingBalanceReal, err := app.SQLGetTSendPendingBalanceReal(
@@ -2328,7 +2328,7 @@ func CheckErc20Withdraw() {
 			}
 			_, ok = addressEthBalanceMap[hotAddress]
 			if !ok {
-				hotAddressBalance, err := ethclient.RpcBalanceAt(
+				hotAddressBalance, err := ethclient.RPCBalanceAt(
 					context.Background(),
 					hotAddress,
 				)
@@ -2356,7 +2356,7 @@ func CheckErc20Withdraw() {
 			tokenBalanceKey := fmt.Sprintf("%s-%s", tokenRow.HotAddress, tokenRow.TokenSymbol)
 			_, ok = addressTokenBalanceMap[tokenBalanceKey]
 			if !ok {
-				tokenBalance, err := ethclient.RpcTokenBalance(
+				tokenBalance, err := ethclient.RPCTokenBalance(
 					context.Background(),
 					tokenRow.TokenAddress,
 					tokenRow.HotAddress,
@@ -2372,7 +2372,7 @@ func CheckErc20Withdraw() {
 		gasPriceValue, err := app.SQLGetTAppStatusIntValueByK(
 			context.Background(),
 			xenv.DbCon,
-			"to_user_gas_price",
+			"to_user_gas_price_eth",
 		)
 		if err != nil {
 			mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
@@ -2391,7 +2391,7 @@ func CheckErc20Withdraw() {
 		gasLimit := erc20GasUseValue
 		// eth fee
 		feeValue := big.NewInt(gasLimit * gasPrice)
-		chainID, err := ethclient.RpcNetworkID(context.Background())
+		chainID, err := ethclient.RPCNetworkID(context.Background())
 		if err != nil {
 			mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 			return
@@ -2629,7 +2629,7 @@ func CheckGasPrice() {
 			context.Background(),
 			xenv.DbCon,
 			&model.DBTAppStatusInt{
-				K: "to_user_gas_price",
+				K: "to_user_gas_price_eth",
 				V: toUserGasPrice,
 			},
 		)
@@ -2641,7 +2641,7 @@ func CheckGasPrice() {
 			context.Background(),
 			xenv.DbCon,
 			&model.DBTAppStatusInt{
-				K: "to_cold_gas_price",
+				K: "to_cold_gas_price_eth",
 				V: toColdGasPrice,
 			},
 		)

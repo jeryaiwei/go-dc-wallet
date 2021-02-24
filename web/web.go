@@ -280,7 +280,7 @@ func postWithdraw(c *gin.Context) {
 	} else if req.Symbol == heos.CoinSymbol {
 		// eos
 		// 验证地址
-		_, err := eosclient.RpcChainGetAccount(
+		_, err := eosclient.RPCChainGetAccount(
 			req.Address,
 		)
 		if err != nil {

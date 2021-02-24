@@ -38,7 +38,7 @@ func init() {
 // GetNonce 获取nonce值
 func GetNonce(tx mcommon.DbExeAble, address string) (int64, error) {
 	// 通过rpc获取
-	rpcNonce, err := ethclient.RpcNonceAt(
+	rpcNonce, err := ethclient.RPCNonceAt(
 		context.Background(),
 		address,
 	)

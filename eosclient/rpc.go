@@ -12,7 +12,7 @@ import (
 
 var rpcURI string
 
-type StRpcRespError struct {
+type StRPCRespError struct {
 	Code     int64  `json:"code"`
 	Message  string `json:"message"`
 	ErrorInv struct {
@@ -28,7 +28,7 @@ type StRpcRespError struct {
 	} `json:"error"`
 }
 
-func (e *StRpcRespError) Error() string {
+func (e *StRPCRespError) Error() string {
 	if len(e.ErrorInv.Details) > 0 {
 		return fmt.Sprintf("%d[%d] %s-%s-%s", e.Code, e.ErrorInv.Code, e.Message, e.ErrorInv.What, e.ErrorInv.Details[0].Message)
 	}
@@ -246,10 +246,10 @@ func doReq(funURI string, arqs interface{}, resp interface{}) error {
 	return nil
 }
 
-// RpcChainGetInfo 获取链信息
-func RpcChainGetInfo() (*StChainGetInfo, error) {
+// RPCChainGetInfo 获取链信息
+func RPCChainGetInfo() (*StChainGetInfo, error) {
 	resp := struct {
-		StRpcRespError
+		StRPCRespError
 		StChainGetInfo
 	}{}
 	err := doReq(
@@ -266,10 +266,10 @@ func RpcChainGetInfo() (*StChainGetInfo, error) {
 	return &resp.StChainGetInfo, nil
 }
 
-// RpcChainGetAccount 获取账户信息
-func RpcChainGetAccount(account string) (*StAccount, error) {
+// RPCChainGetAccount 获取账户信息
+func RPCChainGetAccount(account string) (*StAccount, error) {
 	resp := struct {
-		StRpcRespError
+		StRPCRespError
 		StAccount
 	}{}
 	err := doReq(
@@ -288,10 +288,10 @@ func RpcChainGetAccount(account string) (*StAccount, error) {
 	return &resp.StAccount, nil
 }
 
-// RpcChainGetBlock 获取链信息
-func RpcChainGetBlock(blockNum int64) (*StBlock, error) {
+// RPCChainGetBlock 获取链信息
+func RPCChainGetBlock(blockNum int64) (*StBlock, error) {
 	resp := struct {
-		StRpcRespError
+		StRPCRespError
 		StBlock
 	}{}
 	err := doReq(
@@ -310,10 +310,10 @@ func RpcChainGetBlock(blockNum int64) (*StBlock, error) {
 	return &resp.StBlock, nil
 }
 
-// RpcChainPushTransaction 推送交易
-func RpcChainPushTransaction(arg StPushTransactionArg) (*StPushTransaction, error) {
+// RPCChainPushTransaction 推送交易
+func RPCChainPushTransaction(arg StPushTransactionArg) (*StPushTransaction, error) {
 	resp := struct {
-		StRpcRespError
+		StRPCRespError
 		StPushTransaction
 	}{}
 	err := doReq(
@@ -325,15 +325,15 @@ func RpcChainPushTransaction(arg StPushTransactionArg) (*StPushTransaction, erro
 		return nil, err
 	}
 	if resp.Code != 0 {
-		return nil, &(resp.StRpcRespError)
+		return nil, &(resp.StRPCRespError)
 	}
 	return &resp.StPushTransaction, nil
 }
 
-// RpcChainPushTransaction 推送交易
-func RpcHistoryGetTransaction(id string) (*StPushTransaction, error) {
+// RPCChainPushTransaction 推送交易
+func RPCHistoryGetTransaction(id string) (*StPushTransaction, error) {
 	resp := struct {
-		StRpcRespError
+		StRPCRespError
 		StPushTransaction
 	}{}
 	err := doReq(
@@ -347,7 +347,7 @@ func RpcHistoryGetTransaction(id string) (*StPushTransaction, error) {
 		return nil, err
 	}
 	if resp.Code != 0 {
-		return nil, &(resp.StRpcRespError)
+		return nil, &(resp.StRPCRespError)
 	}
 	return &resp.StPushTransaction, nil
 }

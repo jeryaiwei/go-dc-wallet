@@ -183,7 +183,7 @@ func CheckBlockSeek() {
 			mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 			return
 		}
-		rpcBlockNum, err := omniclient.RpcGetBlockCount()
+		rpcBlockNum, err := omniclient.RPCGetBlockCount()
 		if err != nil {
 			mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 			return
@@ -218,13 +218,13 @@ func CheckBlockSeek() {
 			// 遍历获取需要查询的block信息
 			for i := startI; i < endI; i++ {
 				//mcommon.Log.Debugf("btc check block: %d", i)
-				blockHash, err := omniclient.RpcGetBlockHash(i)
+				blockHash, err := omniclient.RPCGetBlockHash(i)
 				if err != nil {
 					mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 					return
 				}
 				// 一个block
-				rpcBlock, err := omniclient.RpcGetBlockVerbose(blockHash)
+				rpcBlock, err := omniclient.RPCGetBlockVerbose(blockHash)
 				if err != nil {
 					mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 					return
@@ -802,7 +802,7 @@ func CheckRawTxSend() {
 			if sendRow.Hex == "" {
 				continue
 			}
-			_, err := omniclient.RpcSendRawTransaction(sendRow.Hex)
+			_, err := omniclient.RPCSendRawTransaction(sendRow.Hex)
 			if err != nil && !strings.Contains(err.Error(), "already in block chain") {
 				mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 				continue
@@ -1193,7 +1193,7 @@ func CheckRawTxConfirm() {
 		var confirmHashes []string
 		for _, sendRow := range sendRows {
 			if !mcommon.IsStringInSlice(confirmHashes, sendRow.TxID) {
-				rpcTx, err := omniclient.RpcGetRawTransactionVerbose(sendRow.TxID)
+				rpcTx, err := omniclient.RPCGetRawTransactionVerbose(sendRow.TxID)
 				if err != nil {
 					mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 					continue
@@ -1802,7 +1802,7 @@ func OmniCheckBlockSeek() {
 			return
 		}
 
-		rpcBlockNum, err := omniclient.RpcGetBlockCount()
+		rpcBlockNum, err := omniclient.RPCGetBlockCount()
 		if err != nil {
 			mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 			return
@@ -1834,13 +1834,13 @@ func OmniCheckBlockSeek() {
 			// 遍历获取需要查询的block信息
 			for i := startI; i < endI; i++ {
 				//mcommon.Log.Debugf("omni check block: %d", i)
-				blockHash, err := omniclient.RpcGetBlockHash(i)
+				blockHash, err := omniclient.RPCGetBlockHash(i)
 				if err != nil {
 					mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 					return
 				}
 				// 一个block
-				rpcBlock, err := omniclient.RpcGetBlockVerbose(blockHash)
+				rpcBlock, err := omniclient.RPCGetBlockVerbose(blockHash)
 				if err != nil {
 					mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 					return
@@ -1917,7 +1917,7 @@ func OmniCheckBlockSeek() {
 						// 非fee和hot地址
 						rpcTxes := toAddressTxMap[dbAddressRow.Address]
 						for _, rpcTx := range rpcTxes {
-							rpcTx, err := omniclient.RpcOmniGetTransaction(rpcTx.Txid)
+							rpcTx, err := omniclient.RPCOmniGetTransaction(rpcTx.Txid)
 							if err != nil {
 								mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 								return
@@ -2387,7 +2387,7 @@ func OmniCheckWithdraw() {
 			if !mcommon.IsStringInSlice(tokenHotAddresses, tokenRow.HotAddress) {
 				tokenHotAddresses = append(tokenHotAddresses, tokenRow.HotAddress)
 			}
-			balanceRealStr, err := omniclient.RpcOmniGetBalance(
+			balanceRealStr, err := omniclient.RPCOmniGetBalance(
 				tokenRow.HotAddress,
 				tokenRow.TokenIndex,
 			)
@@ -2805,7 +2805,7 @@ func CheckBlockSeekHotAndFee() {
 		)
 		if err != nil {
 			if strings.Contains(err.Error(), "no app status int of") {
-				rpcBlockNum, err := omniclient.RpcGetBlockCount()
+				rpcBlockNum, err := omniclient.RPCGetBlockCount()
 				if err != nil {
 					mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 					return
@@ -2824,7 +2824,7 @@ func CheckBlockSeekHotAndFee() {
 				return
 			}
 		}
-		rpcBlockNum, err := omniclient.RpcGetBlockCount()
+		rpcBlockNum, err := omniclient.RPCGetBlockCount()
 		if err != nil {
 			mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 			return
@@ -2868,13 +2868,13 @@ func CheckBlockSeekHotAndFee() {
 			}
 			// 遍历获取需要查询的block信息
 			for curBlockNum := startI; curBlockNum < endI; curBlockNum++ {
-				blockHash, err := omniclient.RpcGetBlockHash(curBlockNum)
+				blockHash, err := omniclient.RPCGetBlockHash(curBlockNum)
 				if err != nil {
 					mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 					return
 				}
 				// 一个block
-				rpcBlock, err := omniclient.RpcGetBlockVerbose(blockHash)
+				rpcBlock, err := omniclient.RPCGetBlockVerbose(blockHash)
 				if err != nil {
 					mcommon.Log.Errorf("err: [%T] %s", err, err.Error())
 					return
