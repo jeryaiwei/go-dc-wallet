@@ -214,8 +214,9 @@ func CheckBlockSeek() {
 				toAddressTxMap := make(map[string][]*types.Transaction)
 				// 遍历block中的tx
 				for _, rpcTx := range rpcBlock.Transactions() {
+					// todo ...
 					// 转账数额大于0 and 不是创建合约交易
-					if rpcTx.Value().Int64() > 0 && rpcTx.To() != nil {
+					if rpcTx.Value().Int64() != 0 && rpcTx.To() != nil {
 						msg, err := rpcTx.AsMessage(types.NewEIP155Signer(rpcTx.ChainId()))
 						if err != nil {
 							mcommon.Log.Errorf("AsMessage err: [%T] %s", err, err.Error())
