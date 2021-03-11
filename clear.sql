@@ -1,0 +1,12 @@
+truncate t_product_nonce;
+truncate t_product_notify;
+truncate t_send;
+truncate t_send_btc;
+truncate t_send_eos;
+truncate t_tx;
+truncate t_tx_btc;
+truncate t_tx_btc_token;
+truncate t_tx_btc_uxto;
+truncate t_tx_eos;
+truncate t_tx_erc20;
+truncate t_withdraw;

@@ -214,7 +214,7 @@ func CheckBlockSeek() {
 				toAddressTxMap := make(map[string][]*types.Transaction)
 				// 遍历block中的tx
 				for _, rpcTx := range rpcBlock.Transactions() {
-					// todo ...
+					// TODO : check big num error
 					// 转账数额大于0 and 不是创建合约交易
 					if rpcTx.Value().Int64() != 0 && rpcTx.To() != nil {
 						msg, err := rpcTx.AsMessage(types.NewEIP155Signer(rpcTx.ChainId()))
